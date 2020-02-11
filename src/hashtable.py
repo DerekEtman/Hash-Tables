@@ -15,6 +15,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.count = 0
 
 
     def _hash(self, key):
@@ -51,8 +52,25 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # checking if cap is smaller than count
+        if self.count >= self.capacity:
+            # make it bigger
+            self.resize()
 
+        # using hash mod to get index
+        index = self._hash_mod
+
+        if self.storage[index]:
+            if self.storage[index] and self.storage[index].key != key:
+                # make a new list
+                node = self.storage[index]
+                node.next = LinkedPair(key, value)
+            else:
+                self.stoarge[index].value = value
+        # if index in the storage is empty, set it
+        else:
+            self.storage[index] = LinkedPair(key, value)
+        self.count += 1
 
 
     def remove(self, key):
@@ -60,10 +78,16 @@ class HashTable:
         Remove the value stored with the given key.
 
         Print a warning if the key is not found.
-
-        Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        # if the key is in storage
+        if self.storage[index]:
+            #  change to None
+            self.storage[index] = None
+            self.count -= 1
+        else:
+            print(f"{key} doesnt exist.")
 
 
     def retrieve(self, key):
@@ -78,13 +102,8 @@ class HashTable:
 
 
     def resize(self):
-        '''
-        Doubles the capacity of the hash table and
-        rehash all key/value pairs.
-
-        Fill this in.
-        '''
-        pass
+        index = self._hash_mod(key)
+        return (index + 1) % self.resize()
 
 
 
